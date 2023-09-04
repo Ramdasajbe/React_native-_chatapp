@@ -33,7 +33,7 @@ const Chat = ({navigation, route}) => {
       const user = await AsyncStorage.getItem(STORAGE_KEY);
       let Config = {
         headers: {
-          Authorization: `Bearer ${user}`,
+          Authorization: `Bearer ${JSON.parse(user).token}`,
         },
       };
       const {data} = await axios.get(
@@ -57,7 +57,7 @@ const Chat = ({navigation, route}) => {
         const user = await AsyncStorage.getItem(STORAGE_KEY);
         let Config = {
           headers: {
-            Authorization: `Bearer ${user}`,
+            Authorization: `Bearer ${JSON.parse(user).token}`,
           },
         };
 
@@ -79,9 +79,11 @@ const Chat = ({navigation, route}) => {
     }
   };
 
-  useEffect(() => {
+  useEffect(async () => {
+    let STORAGE_KEY = '@user_input';
+    const user = await AsyncStorage.getItem(STORAGE_KEY);
     socket = io('http://192.168.29.243:5000');
-    // socket.emit("setup", user);
+    socket.emit('setup', JSON.parse(user));
 
     socket.on('connected', () => setSocketConnected(true));
 

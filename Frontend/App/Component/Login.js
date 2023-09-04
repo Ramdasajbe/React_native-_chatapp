@@ -21,7 +21,7 @@ const Login = ({navigation}) => {
 
       alert(`Welcome Back! ${data.username}`);
       if (data.username) {
-        addUserToLocalStorage(data.token);
+        addUserToLocalStorage(data);
 
         navigation.navigate('ChatGroups');
       }

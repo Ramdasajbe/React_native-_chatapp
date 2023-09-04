@@ -5,7 +5,7 @@ import api from '../API/Api';
 import axios from 'axios';
 
 const Login = ({navigation}) => {
-  const [email, setemail] = useState('test1@gmail.com');
+  const [email, setemail] = useState('test1132@gmail.com');
   const [password, setpassword] = useState('1234');
   const login = async () => {
     if (!email || !password) {

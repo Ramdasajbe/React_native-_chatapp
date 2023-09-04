@@ -15,6 +15,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const Chat = ({navigation, route}) => {
   let socket, selectedChatCompare;
+  socket = io('http://192.168.29.243:5000');
   let selectedChat = route.params.data;
 
   const [messages, setMessages] = useState([]);
@@ -82,7 +83,7 @@ const Chat = ({navigation, route}) => {
   useEffect(async () => {
     let STORAGE_KEY = '@user_input';
     const user = await AsyncStorage.getItem(STORAGE_KEY);
-    socket = io('http://192.168.29.243:5000');
+    // socket = io('http://192.168.29.243:5000');
     socket.emit('setup', JSON.parse(user));
 
     socket.on('connected', () => setSocketConnected(true));
@@ -97,25 +98,24 @@ const Chat = ({navigation, route}) => {
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 
-  // useEffect(() => {
-
-  // });
-  socket = io('http://192.168.29.243:5000');
-  socket.on('message-received', newMessageReceived => {
-    Alert.alert('data', newMessageReceived);
-    if (
-      !selectedChatCompare ||
-      selectedChatCompare._id !== newMessageReceived.chat._id
-    ) {
-      // notification
-      if (!notification.includes(newMessageReceived)) {
-        setNotification([newMessageReceived, ...notification]);
-        setFetchAgain(!fetchAgain);
+  const grtMessages = () => {
+    socket.on('message-received', newMessageReceived => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageReceived.chat._id
+      ) {
+        // notification
+        if (!notification.includes(newMessageReceived)) {
+          setNotification([newMessageReceived, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
+      } else {
+        setMessages([...messages, newMessageReceived]);
       }
-    } else {
-      setMessages([...messages, newMessageReceived]);
-    }
-  });
+    });
+  };
+  grtMessages();
+
   const typingHandler = e => {
     setNewMessage(e);
 

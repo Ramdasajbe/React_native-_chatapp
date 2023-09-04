@@ -20,6 +20,7 @@ const Login = ({navigation}) => {
       });
 
       alert(`Welcome Back! ${data.username}`);
+      console.log('login===>', data);
       if (data.username) {
         addUserToLocalStorage(data);
 

@@ -1,7 +1,6 @@
 import {StyleSheet, Text, View, TextInput, Button} from 'react-native';
 import React, {useState} from 'react';
 import {addUserToLocalStorage} from './AsyncStorage';
-import api from '../API/Api';
 import axios from 'axios';
 
 const Login = ({navigation}) => {
@@ -14,7 +13,8 @@ const Login = ({navigation}) => {
       return;
     }
     try {
-      const {data} = await api.post('/api/v1/auth/login', {
+      alert()
+      const {data} = await axios.post('http://192.168.29.243:5000/api/v1/auth/login', {
         email,
         password,
       });
@@ -26,7 +26,7 @@ const Login = ({navigation}) => {
         navigation.navigate('ChatGroups');
       }
     } catch (error) {
-      alert(error);
+      alert("ALERTTT"+error);
       //alert(error.response.data.msg);
     }
   };

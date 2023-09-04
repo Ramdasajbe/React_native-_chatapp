@@ -34,7 +34,7 @@ const Chat = ({navigation, route}) => {
         },
       };
       const {data} = await axios.get(
-        `http://192.168.137.1:5000/api/v1/message/${selectedChat._id}`,
+        `http://192.168.29.243:5000/api/v1/message/${selectedChat._id}`,
         Config,
       );
 
@@ -59,7 +59,7 @@ const Chat = ({navigation, route}) => {
         };
 
         const {data} = await axios.post(
-          `http://192.168.137.1:5000/api/v1/message/`,
+          `http://192.168.29.243:5000/api/v1/message/`,
           {
             message: newMessage,
             chatId: selectedChat._id,
@@ -77,7 +77,7 @@ const Chat = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    socket = io('http://192.168.137.1:5000');
+    socket = io('http://192.168.29.243:5000');
     // socket.emit("setup", user);
 
     socket.on('connected', () => setSocketConnected(true));
@@ -93,7 +93,7 @@ const Chat = ({navigation, route}) => {
   }, [selectedChat]);
 
   useEffect(() => {
-    socket = io('http://192.168.137.1:5000');
+    socket = io('http://192.168.29.243:5000');
     socket.on('message-received', newMessageReceived => {
       if (
         !selectedChatCompare ||

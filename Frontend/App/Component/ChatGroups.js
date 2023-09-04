@@ -28,7 +28,7 @@ const ChatGroups = ({navigation}) => {
         },
       };
       const {data} = await axios.get(
-        'http://192.168.137.1:5000/api/v1/chat',
+        'http://192.168.29.243:5000/api/v1/chat',
         Config,
       );
       setGroups(data);

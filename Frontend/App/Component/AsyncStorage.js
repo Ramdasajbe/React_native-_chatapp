@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 let STORAGE_KEY = '@user_input';
 export const addUserToLocalStorage = async token => {
   try {
-    await AsyncStorage.setItem(STORAGE_KEY, token);
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(token));
     // alert('Data successfully saved');
   } catch (e) {
     alert('Failed to save the data to the storage');

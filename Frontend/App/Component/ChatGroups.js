@@ -22,13 +22,14 @@ const ChatGroups = ({navigation}) => {
     try {
       let STORAGE_KEY = '@user_input';
       const user = await AsyncStorage.getItem(STORAGE_KEY);
+
       let Config = {
         headers: {
-          Authorization: `Bearer ${user}`,
+          Authorization: `Bearer ${JSON.parse(user).token}`,
         },
       };
       const {data} = await axios.get(
-        'http://192.168.137.1:5000/api/v1/chat',
+        'http://192.168.29.243:5000/api/v1/chat',
         Config,
       );
       setGroups(data);
@@ -47,5 +48,3 @@ const ChatGroups = ({navigation}) => {
 };
 
 export default ChatGroups;
-
-const styles = StyleSheet.create({});

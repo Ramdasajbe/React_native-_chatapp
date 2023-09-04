@@ -4,7 +4,7 @@ import {Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //const user = AsyncStorage.getItem(STORAGE_KEY);
 const api = axios.create({
-  baseURL: 'http://192.168.137.1:5000',
+  baseURL: 'http://192.168.29.243:5000',
   // headers: {
   //   Authorization: `Bearer ${user}`,
   // },

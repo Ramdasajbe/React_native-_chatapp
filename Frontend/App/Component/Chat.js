@@ -4,12 +4,15 @@ import {
   View,
   TouchableOpacity,
   TextInput,
+  Dimensions,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import MessageList from './MessageList';
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 const Chat = ({navigation, route}) => {
   let socket, selectedChatCompare;
   let selectedChat = route.params.data;
@@ -30,7 +33,7 @@ const Chat = ({navigation, route}) => {
       const user = await AsyncStorage.getItem(STORAGE_KEY);
       let Config = {
         headers: {
-          Authorization: `Bearer ${user}`,
+          Authorization: `Bearer ${JSON.parse(user).token}`,
         },
       };
       const {data} = await axios.get(
@@ -54,7 +57,7 @@ const Chat = ({navigation, route}) => {
         const user = await AsyncStorage.getItem(STORAGE_KEY);
         let Config = {
           headers: {
-            Authorization: `Bearer ${user}`,
+            Authorization: `Bearer ${JSON.parse(user).token}`,
           },
         };
 
@@ -76,9 +79,11 @@ const Chat = ({navigation, route}) => {
     }
   };
 
-  useEffect(() => {
+  useEffect(async () => {
+    let STORAGE_KEY = '@user_input';
+    const user = await AsyncStorage.getItem(STORAGE_KEY);
     socket = io('http://192.168.29.243:5000');
-    // socket.emit("setup", user);
+    socket.emit('setup', JSON.parse(user));
 
     socket.on('connected', () => setSocketConnected(true));
 
@@ -92,24 +97,25 @@ const Chat = ({navigation, route}) => {
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 
-  useEffect(() => {
-    socket = io('http://192.168.29.243:5000');
-    socket.on('message-received', newMessageReceived => {
-      if (
-        !selectedChatCompare ||
-        selectedChatCompare._id !== newMessageReceived.chat._id
-      ) {
-        // notification
-        if (!notification.includes(newMessageReceived)) {
-          setNotification([newMessageReceived, ...notification]);
-          setFetchAgain(!fetchAgain);
-        }
-      } else {
-        setMessages([...messages, newMessageReceived]);
-      }
-    });
-  });
+  // useEffect(() => {
 
+  // });
+  socket = io('http://192.168.29.243:5000');
+  socket.on('message-received', newMessageReceived => {
+    Alert.alert('data', newMessageReceived);
+    if (
+      !selectedChatCompare ||
+      selectedChatCompare._id !== newMessageReceived.chat._id
+    ) {
+      // notification
+      if (!notification.includes(newMessageReceived)) {
+        setNotification([newMessageReceived, ...notification]);
+        setFetchAgain(!fetchAgain);
+      }
+    } else {
+      setMessages([...messages, newMessageReceived]);
+    }
+  });
   const typingHandler = e => {
     setNewMessage(e);
 
@@ -133,7 +139,7 @@ const Chat = ({navigation, route}) => {
 
   return (
     <View>
-      <View>
+      <View style={styles.mainView}>
         {loading ? (
           <View>
             <Text>Loading.....</Text>
@@ -145,6 +151,7 @@ const Chat = ({navigation, route}) => {
               return <Text>{value.message}</Text>;
             })}
           </View>
+          // <MessageList message={messages} />
         )}
         <TouchableOpacity>
           {isTyping ? (
@@ -170,4 +177,8 @@ const Chat = ({navigation, route}) => {
 
 export default Chat;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  mainView: {
+    padding: windowWidth / 16,
+  },
+});

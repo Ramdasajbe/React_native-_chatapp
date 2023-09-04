@@ -55,7 +55,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   const { username, email, password } = req.body;
-
+  console.log("logindata", username, email, password);
   if ((!username && !email) || !password) {
     throw new BadRequestError("Please Provide All the Values");
   }

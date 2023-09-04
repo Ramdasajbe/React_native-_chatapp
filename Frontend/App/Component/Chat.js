@@ -37,6 +37,12 @@ const Chat = ({navigation, route}) => {
           Authorization: `Bearer ${JSON.parse(user).token}`,
         },
       };
+      console.log(
+        'getdata',
+        JSON.parse(user).token,
+        '++++selectedChat._id',
+        selectedChat._id,
+      );
       const {data} = await axios.get(
         `http://192.168.29.243:5000/api/v1/message/${selectedChat._id}`,
         Config,
@@ -56,6 +62,7 @@ const Chat = ({navigation, route}) => {
       try {
         let STORAGE_KEY = '@user_input';
         const user = await AsyncStorage.getItem(STORAGE_KEY);
+
         let Config = {
           headers: {
             Authorization: `Bearer ${JSON.parse(user).token}`,
@@ -100,18 +107,20 @@ const Chat = ({navigation, route}) => {
 
   const grtMessages = () => {
     socket.on('message-received', newMessageReceived => {
-      if (
-        !selectedChatCompare ||
-        selectedChatCompare._id !== newMessageReceived.chat._id
-      ) {
-        // notification
-        if (!notification.includes(newMessageReceived)) {
-          setNotification([newMessageReceived, ...notification]);
-          setFetchAgain(!fetchAgain);
-        }
-      } else {
-        setMessages([...messages, newMessageReceived]);
-      }
+      alert(JSON.stringify(newMessageReceived));
+      setMessages([...messages, newMessageReceived]);
+      // if (
+      //   !selectedChatCompare ||
+      //   selectedChatCompare._id !== newMessageReceived.chat._id
+      // ) {
+      //   // notification
+      //   if (!notification.includes(newMessageReceived)) {
+      //     setNotification([newMessageReceived, ...notification]);
+      //     setFetchAgain(!fetchAgain);
+      //   }
+      // } else {
+      //   setMessages([...messages, newMessageReceived]);
+      // }
     });
   };
   grtMessages();
@@ -168,7 +177,12 @@ const Chat = ({navigation, route}) => {
             value={newMessage}
             onChangeText={e => typingHandler(e)}
           />
-          <Text onPress={sendMessage}>Send</Text>
+          <Text
+            onPress={() => {
+              sendMessage();
+            }}>
+            Send
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

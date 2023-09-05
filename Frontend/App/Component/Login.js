@@ -13,9 +13,8 @@ const Login = ({navigation}) => {
       return;
     }
     try {
-      alert();
       const {data} = await axios.post(
-        'http://192.168.29.243:5000/api/v1/auth/login',
+        'http://192.168.29.244:5000/api/v1/auth/login',
         {
           email,
           password,

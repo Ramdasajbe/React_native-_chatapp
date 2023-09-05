@@ -151,9 +151,7 @@ const Chat = ({navigation, route}) => {
             <Text>Loading.....</Text>
           </View>
         ) : (
-          <View style={{height: '80%'}}>
             <MessageList message={messages} />
-          </View>
         )}
         <TouchableOpacity>
           {isTyping ? (
@@ -164,7 +162,6 @@ const Chat = ({navigation, route}) => {
             <></>
           )}
           <TextInput
-            style={{height: '20%'}}
             variant="filled"
             bg="#E0E0E0"
             placeholder="Enter a message.."

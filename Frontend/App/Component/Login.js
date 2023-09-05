@@ -28,7 +28,6 @@ const Login = ({navigation}) => {
       }
     } catch (error) {
       alert(error);
-      //alert(error.response.data.msg);
     }
   };
   return (

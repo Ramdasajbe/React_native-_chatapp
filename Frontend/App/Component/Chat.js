@@ -38,9 +38,9 @@ const Chat = ({navigation, route}) => {
         },
       };
       console.log(
-        'getdata',
+        'recive',
         JSON.parse(user).token,
-        '++++selectedChat._id',
+        'selectedChat._id',
         selectedChat._id,
       );
       const {data} = await axios.get(
@@ -62,7 +62,6 @@ const Chat = ({navigation, route}) => {
       try {
         let STORAGE_KEY = '@user_input';
         const user = await AsyncStorage.getItem(STORAGE_KEY);
-
         let Config = {
           headers: {
             Authorization: `Bearer ${JSON.parse(user).token}`,
@@ -104,26 +103,24 @@ const Chat = ({navigation, route}) => {
 
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
+  // useEffect(() => {
+  //   grtMessages();
+  // });
 
-  const grtMessages = () => {
-    socket.on('message-received', newMessageReceived => {
-      alert(JSON.stringify(newMessageReceived));
+  socket.on('message-received', async newMessageReceived => {
+    if (
+      !selectedChatCompare ||
+      selectedChatCompare._id !== newMessageReceived.chat._id
+    ) {
+      // notification
+      if (!notification.includes(newMessageReceived)) {
+        setNotification([newMessageReceived, ...notification]);
+        setFetchAgain(!fetchAgain);
+      }
+    } else {
       setMessages([...messages, newMessageReceived]);
-      // if (
-      //   !selectedChatCompare ||
-      //   selectedChatCompare._id !== newMessageReceived.chat._id
-      // ) {
-      //   // notification
-      //   if (!notification.includes(newMessageReceived)) {
-      //     setNotification([newMessageReceived, ...notification]);
-      //     setFetchAgain(!fetchAgain);
-      //   }
-      // } else {
-      //   setMessages([...messages, newMessageReceived]);
-      // }
-    });
-  };
-  grtMessages();
+    }
+  });
 
   const typingHandler = e => {
     setNewMessage(e);
@@ -154,13 +151,7 @@ const Chat = ({navigation, route}) => {
             <Text>Loading.....</Text>
           </View>
         ) : (
-          <View>
-            {/* this is for map data */}
-            {messages.map(value => {
-              return <Text>{value.message}</Text>;
-            })}
-          </View>
-          // <MessageList message={messages} />
+          <MessageList message={messages} />
         )}
         <TouchableOpacity>
           {isTyping ? (

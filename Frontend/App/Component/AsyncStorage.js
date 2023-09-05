@@ -1,12 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
 let STORAGE_KEY = '@user_input';
 export const addUserToLocalStorage = async token => {
   try {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(token));
-    Alert.alert('Data successfully saved',JSON.stringify(token));
+    // Alert.alert('Data successfully saved',JSON.stringify(token));
   } catch (e) {
-    Alert.alert('Failed to save the data to the storage',e);
+    // Alert.alert('Failed to save the data to the storage',e);
   }
 };
 export const getUserFromLocalStorage = async () => {
@@ -20,11 +20,10 @@ export const getUserFromLocalStorage = async () => {
 };
 
 export const RemoveUserFromLocalStorage = () => {
-  try{
-    AsyncStorage.removeItem(STORAGE_KEY)
-    Alert.alert("Removing the User")
-  }catch(e){
+  try {
+    AsyncStorage.removeItem(STORAGE_KEY);
+    Alert.alert('Removing the User');
+  } catch (e) {
     Alert.alert('Failed to Remove the user');
   }
-}
- 
+};

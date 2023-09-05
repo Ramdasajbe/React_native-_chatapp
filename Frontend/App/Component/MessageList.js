@@ -1,5 +1,5 @@
-import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import {Dimensions, FlatList, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -9,40 +9,47 @@ const windowHeight = Dimensions.get('window').height;
 const MessageList = props => {
   //Message data comes from props
   let messageData = props.message;
-  const [user,Setuser] = useState('')
+  const [user, Setuser] = useState('');
 
-  useEffect( () => {
-    getUserData()
-  } )
+  useEffect(() => {
+    getUserData();
+  });
 
   const getUserData = async () => {
     let STORAGE_KEY = '@user_input';
     const userData = await AsyncStorage.getItem(STORAGE_KEY);
-    Setuser(JSON.parse(userData))
-  }
+    Setuser(JSON.parse(userData));
+  };
 
-  console.log("ytsayt=>>",user)
   //Flatlist function
   const renderMessage = item => {
-    console.log(item)
     return (
       <View style={styles.mainView}>
-        {
-          item.item.sender._id !== user._id ? <View key={item.index} style={styles.recevierView}>
-            {<View style={styles.mainText}>
-              <Text style={styles.user}>{item.item.sender.username}</Text>
-              <Text style={styles.message}>{item.item.message}</Text>
-              <Text style={styles.time}>{moment(item.item.createdAt).format("DD-MM-YYYY hh:mm:a")}</Text>
-            </View>}
-          </View> :
-            <View key={item.index} style={styles.userView}>
-              {<View style={styles.mainText}>
+        {item.item.sender._id !== user._id ? (
+          <View key={item.index} style={styles.recevierView}>
+            {
+              <View style={styles.mainText}>
                 <Text style={styles.user}>{item.item.sender.username}</Text>
                 <Text style={styles.message}>{item.item.message}</Text>
-                <Text style={styles.time}>{moment(item.item.createdAt).format("DD-MM-YYYY hh:mm:a")}</Text>
-              </View>}
-            </View>
-        }
+                <Text style={styles.time}>
+                  {moment(item.item.createdAt).format('DD-MM-YYYY hh:mm:a')}
+                </Text>
+              </View>
+            }
+          </View>
+        ) : (
+          <View key={item.index} style={styles.userView}>
+            {
+              <View style={styles.mainText}>
+                <Text style={styles.user}>{item.item.sender.username}</Text>
+                <Text style={styles.message}>{item.item.message}</Text>
+                <Text style={styles.time}>
+                  {moment(item.item.createdAt).format('DD-MM-YYYY hh:mm:a')}
+                </Text>
+              </View>
+            }
+          </View>
+        )}
       </View>
     );
   };
@@ -68,17 +75,17 @@ const styles = StyleSheet.create({
   },
   mainView: {
     flex: 1,
-    width: '100%'
+    width: '100%',
   },
   recevierView: {
     width: '50%',
     backgroundColor: 'white',
     marginBottom: 10,
     borderRadius: 6,
-  },  
+  },
   userView: {
     width: '50%',
-    alignSelf:'flex-end',
+    alignSelf: 'flex-end',
     backgroundColor: 'white',
     marginBottom: 10,
     borderRadius: 6,
@@ -86,15 +93,15 @@ const styles = StyleSheet.create({
   user: {
     fontSize: 16,
     color: 'blue',
-    fontWeight: '600'
+    fontWeight: '600',
   },
   message: {
-    margin:10
+    margin: 10,
   },
   view: {
-    maxHeight: '88%'
+    maxHeight: '88%',
   },
   time: {
-    alignSelf: 'flex-end'
-  }
+    alignSelf: 'flex-end',
+  },
 });

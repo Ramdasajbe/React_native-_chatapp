@@ -5,15 +5,14 @@ import {
   TouchableOpacity,
   View,
   Alert,
-  BackHandler
+  BackHandler,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import axios from 'axios';
-import { RemoveUserFromLocalStorage } from './AsyncStorage';
+import {RemoveUserFromLocalStorage} from './AsyncStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-const ChatGroups = ({ navigation }) => {
+const ChatGroups = ({navigation}) => {
   const [Groups, setGroups] = React.useState([]);
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
@@ -24,7 +23,7 @@ const ChatGroups = ({ navigation }) => {
       navigation.setOptions({
         onclick: {},
         headerShown: true,
-      })
+      });
     }
   }, []);
 
@@ -39,22 +38,20 @@ const ChatGroups = ({ navigation }) => {
         },
       };
       const {data} = await axios.get(
-        'https://chatapp-d0f9.onrender.com/api/v1/chat',
+        'http://192.168.29.244:5000/api/v1/chat',
         Config,
       );
       setGroups(data);
-    } catch (error) { }
+    } catch (error) {}
   };
 
-
-
   return (
-    <View style={{ width: windowWidth, display: 'flex', alignItems: 'center' }}>
+    <View style={{width: windowWidth, display: 'flex', alignItems: 'center'}}>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('SingalChat', { data: Groups[0] });
+          navigation.navigate('SingalChat', {data: Groups[0]});
         }}>
-        <Text style={{ fontSize: 30 }}>{Groups[0]?.chatName}</Text>
+        <Text style={{fontSize: 30}}>{Groups[0]?.chatName}</Text>
       </TouchableOpacity>
     </View>
   );

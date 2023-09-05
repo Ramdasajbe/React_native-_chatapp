@@ -4,6 +4,6 @@
         <!-- Localhost config is NEEDED from react-native for the bundling to work  -->
         <domain-config cleartextTrafficPermitted="true">
             <domain includeSubdomains="true">192.168.29.244:5000</domain>
-            <domain includeSubdomains="true">chatapp-d0f9.onrender.com</domain>
+            <domain includeSubdomains="true">15.207.84.98</domain>
         </domain-config>
 </network-security-config>

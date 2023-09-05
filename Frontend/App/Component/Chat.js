@@ -15,7 +15,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const Chat = ({navigation, route}) => {
   let socket, selectedChatCompare;
-  socket = io('https://chatapp-d0f9.onrender.com');
+  socket = io('http://192.168.29.244:5000');
   let selectedChat = route.params.data;
 
   const [messages, setMessages] = useState([]);
@@ -37,14 +37,9 @@ const Chat = ({navigation, route}) => {
           Authorization: `Bearer ${JSON.parse(user).token}`,
         },
       };
-      console.log(
-        'recive',
-        JSON.parse(user).token,
-        'selectedChat._id',
-        selectedChat._id,
-      );
+
       const {data} = await axios.get(
-        `https://chatapp-d0f9.onrender.com/api/v1/message/${selectedChat._id}`,
+        `http://192.168.29.244:5000/api/v1/message/${selectedChat._id}`,
         Config,
       );
 
@@ -69,7 +64,7 @@ const Chat = ({navigation, route}) => {
         };
 
         const {data} = await axios.post(
-          `https://chatapp-d0f9.onrender.com/api/v1/message/`,
+          `http://192.168.29.244:5000/api/v1/message/`,
           {
             message: newMessage,
             chatId: selectedChat._id,
@@ -86,18 +81,20 @@ const Chat = ({navigation, route}) => {
     }
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    SocketConnection();
+  }, []);
+  const SocketConnection = async () => {
     let STORAGE_KEY = '@user_input';
     const user = await AsyncStorage.getItem(STORAGE_KEY);
-    // socket = io('https://chatapp-d0f9.onrender.com');
+    // socket = io('http://192.168.29.244:5000');
     socket.emit('setup', JSON.parse(user));
 
     socket.on('connected', () => setSocketConnected(true));
 
     socket.on('typing', () => setIsTyping(true));
     socket.on('stop-typing', () => setIsTyping(false));
-  }, []);
-
+  };
   useEffect(() => {
     fetchMessages();
 
@@ -151,7 +148,7 @@ const Chat = ({navigation, route}) => {
             <Text>Loading.....</Text>
           </View>
         ) : (
-            <MessageList message={messages} />
+          <MessageList message={messages} />
         )}
         <TouchableOpacity>
           {isTyping ? (

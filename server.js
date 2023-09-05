@@ -83,7 +83,7 @@ io.on("connection", (socket) => {
   //connected to correct id
   socket.on("setup", (userData) => {
     socket.join(userData._id);
-    console.log("userData._id", userData._id);
+
     socket.emit("connected");
   });
 
@@ -101,7 +101,7 @@ io.on("connection", (socket) => {
 
     chat.users.forEach((user) => {
       if (user._id === newMessageReceived.sender._id) return;
-      console.log("newMessageReceived", user._id);
+
       socket.in(user._id).emit("message-received", newMessageReceived);
     });
   });

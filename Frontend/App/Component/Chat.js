@@ -15,6 +15,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const Chat = ({navigation, route}) => {
   let socket, selectedChatCompare;
+  socket = io('http://192.168.29.243:5000');
   let selectedChat = route.params.data;
 
   const [messages, setMessages] = useState([]);
@@ -36,6 +37,12 @@ const Chat = ({navigation, route}) => {
           Authorization: `Bearer ${JSON.parse(user).token}`,
         },
       };
+      console.log(
+        'recive',
+        JSON.parse(user).token,
+        'selectedChat._id',
+        selectedChat._id,
+      );
       const {data} = await axios.get(
         `http://192.168.29.243:5000/api/v1/message/${selectedChat._id}`,
         Config,
@@ -82,7 +89,7 @@ const Chat = ({navigation, route}) => {
   useEffect(async () => {
     let STORAGE_KEY = '@user_input';
     const user = await AsyncStorage.getItem(STORAGE_KEY);
-    socket = io('http://192.168.29.243:5000');
+    // socket = io('http://192.168.29.243:5000');
     socket.emit('setup', JSON.parse(user));
 
     socket.on('connected', () => setSocketConnected(true));
@@ -96,13 +103,11 @@ const Chat = ({navigation, route}) => {
 
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
-
   // useEffect(() => {
-
+  //   grtMessages();
   // });
-  socket = io('http://192.168.29.243:5000');
-  socket.on('message-received', newMessageReceived => {
-    Alert.alert('data', newMessageReceived);
+
+  socket.on('message-received', async newMessageReceived => {
     if (
       !selectedChatCompare ||
       selectedChatCompare._id !== newMessageReceived.chat._id
@@ -116,6 +121,7 @@ const Chat = ({navigation, route}) => {
       setMessages([...messages, newMessageReceived]);
     }
   });
+
   const typingHandler = e => {
     setNewMessage(e);
 
@@ -145,13 +151,7 @@ const Chat = ({navigation, route}) => {
             <Text>Loading.....</Text>
           </View>
         ) : (
-          <View>
-            {/* this is for map data */}
-            {messages.map(value => {
-              return <Text>{value.message}</Text>;
-            })}
-          </View>
-          // <MessageList message={messages} />
+          <MessageList message={messages} />
         )}
         <TouchableOpacity>
           {isTyping ? (
@@ -168,7 +168,12 @@ const Chat = ({navigation, route}) => {
             value={newMessage}
             onChangeText={e => typingHandler(e)}
           />
-          <Text onPress={sendMessage}>Send</Text>
+          <Text
+            onPress={() => {
+              sendMessage();
+            }}>
+            Send
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

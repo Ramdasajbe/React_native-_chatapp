@@ -4,7 +4,7 @@ import {addUserToLocalStorage} from './AsyncStorage';
 import axios from 'axios';
 
 const Login = ({navigation}) => {
-  const [email, setemail] = useState('test3@gmail.com');
+  const [email, setemail] = useState('test2@gmail.com');
   const [password, setpassword] = useState('1234');
   const login = async () => {
     if (!email || !password) {
@@ -20,6 +20,7 @@ const Login = ({navigation}) => {
       });
 
       alert(`Welcome Back! ${data.username}`);
+
       if (data.username) {
         addUserToLocalStorage(data);
 

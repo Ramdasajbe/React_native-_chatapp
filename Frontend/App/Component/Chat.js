@@ -15,7 +15,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const Chat = ({navigation, route}) => {
   let socket, selectedChatCompare;
-  socket = io('http://192.168.29.243:5000');
+  socket = io('http://192.168.29.244:5000');
   let selectedChat = route.params.data;
 
   const [messages, setMessages] = useState([]);
@@ -38,13 +38,13 @@ const Chat = ({navigation, route}) => {
         },
       };
       console.log(
-        'getdata',
+        'recive',
         JSON.parse(user).token,
-        '++++selectedChat._id',
+        'selectedChat._id',
         selectedChat._id,
       );
       const {data} = await axios.get(
-        `http://192.168.29.243:5000/api/v1/message/${selectedChat._id}`,
+        `http://192.168.29.244:5000/api/v1/message/${selectedChat._id}`,
         Config,
       );
 
@@ -62,7 +62,6 @@ const Chat = ({navigation, route}) => {
       try {
         let STORAGE_KEY = '@user_input';
         const user = await AsyncStorage.getItem(STORAGE_KEY);
-
         let Config = {
           headers: {
             Authorization: `Bearer ${JSON.parse(user).token}`,
@@ -70,7 +69,7 @@ const Chat = ({navigation, route}) => {
         };
 
         const {data} = await axios.post(
-          `http://192.168.29.243:5000/api/v1/message/`,
+          `http://192.168.29.244:5000/api/v1/message/`,
           {
             message: newMessage,
             chatId: selectedChat._id,
@@ -90,7 +89,7 @@ const Chat = ({navigation, route}) => {
   useEffect(async () => {
     let STORAGE_KEY = '@user_input';
     const user = await AsyncStorage.getItem(STORAGE_KEY);
-    // socket = io('http://192.168.29.243:5000');
+    // socket = io('http://192.168.29.244:5000');
     socket.emit('setup', JSON.parse(user));
 
     socket.on('connected', () => setSocketConnected(true));
@@ -104,26 +103,24 @@ const Chat = ({navigation, route}) => {
 
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
+  // useEffect(() => {
+  //   grtMessages();
+  // });
 
-  const grtMessages = () => {
-    socket.on('message-received', newMessageReceived => {
-      alert(JSON.stringify(newMessageReceived));
+  socket.on('message-received', async newMessageReceived => {
+    if (
+      !selectedChatCompare ||
+      selectedChatCompare._id !== newMessageReceived.chat._id
+    ) {
+      // notification
+      if (!notification.includes(newMessageReceived)) {
+        setNotification([newMessageReceived, ...notification]);
+        setFetchAgain(!fetchAgain);
+      }
+    } else {
       setMessages([...messages, newMessageReceived]);
-      // if (
-      //   !selectedChatCompare ||
-      //   selectedChatCompare._id !== newMessageReceived.chat._id
-      // ) {
-      //   // notification
-      //   if (!notification.includes(newMessageReceived)) {
-      //     setNotification([newMessageReceived, ...notification]);
-      //     setFetchAgain(!fetchAgain);
-      //   }
-      // } else {
-      //   setMessages([...messages, newMessageReceived]);
-      // }
-    });
-  };
-  grtMessages();
+    }
+  });
 
   const typingHandler = e => {
     setNewMessage(e);
@@ -154,13 +151,9 @@ const Chat = ({navigation, route}) => {
             <Text>Loading.....</Text>
           </View>
         ) : (
-          <View>
-            {/* this is for map data */}
-            {messages.map(value => {
-              return <Text>{value.message}</Text>;
-            })}
+          <View style={{height: '80%'}}>
+            <MessageList message={messages} />
           </View>
-          // <MessageList message={messages} />
         )}
         <TouchableOpacity>
           {isTyping ? (
@@ -171,6 +164,7 @@ const Chat = ({navigation, route}) => {
             <></>
           )}
           <TextInput
+            style={{height: '20%'}}
             variant="filled"
             bg="#E0E0E0"
             placeholder="Enter a message.."

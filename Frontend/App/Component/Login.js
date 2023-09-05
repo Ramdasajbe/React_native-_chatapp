@@ -1,7 +1,6 @@
 import {StyleSheet, Text, View, TextInput, Button} from 'react-native';
 import React, {useState} from 'react';
 import {addUserToLocalStorage} from './AsyncStorage';
-import api from '../API/Api';
 import axios from 'axios';
 
 const Login = ({navigation}) => {
@@ -14,10 +13,13 @@ const Login = ({navigation}) => {
       return;
     }
     try {
-      const {data} = await api.post('/api/v1/auth/login', {
-        email,
-        password,
-      });
+      const {data} = await axios.post(
+        'http://192.168.29.244:5000/api/v1/auth/login',
+        {
+          email,
+          password,
+        },
+      );
 
       alert(`Welcome Back! ${data.username}`);
 
@@ -28,7 +30,6 @@ const Login = ({navigation}) => {
       }
     } catch (error) {
       alert(error);
-      //alert(error.response.data.msg);
     }
   };
   return (

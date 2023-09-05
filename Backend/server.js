@@ -44,6 +44,7 @@ app.use(xss());
 app.use(mongoSanitize());
 
 app.get("/", (req, res) => {
+  console.log("Server Running Log !!!!!")
   res.send("Server Running!");
 });
 

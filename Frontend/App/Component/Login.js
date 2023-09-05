@@ -14,7 +14,7 @@ const Login = ({navigation}) => {
     }
     try {
       const {data} = await axios.post(
-        'http://192.168.29.244:5000/api/v1/auth/login',
+        'https://chatapp-d0f9.onrender.com/api/v1/auth/login',
         {
           email,
           password,

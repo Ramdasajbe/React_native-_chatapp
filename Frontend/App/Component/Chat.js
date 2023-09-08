@@ -37,12 +37,7 @@ const Chat = ({navigation, route}) => {
           Authorization: `Bearer ${JSON.parse(user).token}`,
         },
       };
-      console.log(
-        'recive',
-        JSON.parse(user).token,
-        'selectedChat._id',
-        selectedChat._id,
-      );
+
       const {data} = await axios.get(
         `http://192.168.29.244:5000/api/v1/message/${selectedChat._id}`,
         Config,
@@ -86,7 +81,10 @@ const Chat = ({navigation, route}) => {
     }
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    SocketConnection();
+  }, []);
+  const SocketConnection = async () => {
     let STORAGE_KEY = '@user_input';
     const user = await AsyncStorage.getItem(STORAGE_KEY);
     // socket = io('http://192.168.29.244:5000');
@@ -96,8 +94,7 @@ const Chat = ({navigation, route}) => {
 
     socket.on('typing', () => setIsTyping(true));
     socket.on('stop-typing', () => setIsTyping(false));
-  }, []);
-
+  };
   useEffect(() => {
     fetchMessages();
 
@@ -151,9 +148,7 @@ const Chat = ({navigation, route}) => {
             <Text>Loading.....</Text>
           </View>
         ) : (
-          <View style={{height: '80%'}}>
-            <MessageList message={messages} />
-          </View>
+          <MessageList message={messages} />
         )}
         <TouchableOpacity>
           {isTyping ? (
@@ -164,7 +159,6 @@ const Chat = ({navigation, route}) => {
             <></>
           )}
           <TextInput
-            style={{height: '20%'}}
             variant="filled"
             bg="#E0E0E0"
             placeholder="Enter a message.."

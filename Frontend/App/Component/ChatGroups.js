@@ -5,19 +5,28 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  BackHandler,
 } from 'react-native';
 import React, {useEffect} from 'react';
 import axios from 'axios';
-import api from '../API/Api';
-import {getUserFromLocalStorage} from './AsyncStorage';
+import {RemoveUserFromLocalStorage} from './AsyncStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const ChatGroups = ({navigation}) => {
   const [Groups, setGroups] = React.useState([]);
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
+
   useEffect(() => {
     getChatGroup();
+    {
+      navigation.setOptions({
+        onclick: {},
+        headerShown: true,
+      });
+    }
   }, []);
+
   const getChatGroup = async () => {
     try {
       let STORAGE_KEY = '@user_input';
@@ -35,6 +44,7 @@ const ChatGroups = ({navigation}) => {
       setGroups(data);
     } catch (error) {}
   };
+
   return (
     <View style={{width: windowWidth, display: 'flex', alignItems: 'center'}}>
       <TouchableOpacity
